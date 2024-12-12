@@ -9,19 +9,21 @@ function MyApp({ Component, pageProps }) {
   // Execute liff.init() when the app is initialized
   useEffect(() => {
     console.log("start liff.init()...");
+    const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // 環境変数を読み込む
+    if (!liffId) {
+      console.error("LIFF ID is not defined. Please set NEXT_PUBLIC_LIFF_ID.");
+      setLiffError("LIFF ID is not defined.");
+      return;
+    }
+
     liff
-      .init({ liffId: process.env.LIFF_ID })
+      .init({ liffId })
       .then(() => {
         console.log("liff.init() done");
         setLiffObject(liff);
       })
       .catch((error) => {
         console.log(`liff.init() failed: ${error}`);
-        if (!process.env.liffId) {
-          console.info(
-            "LIFF Starter: Please make sure that you provided `LIFF_ID` as an environmental variable."
-          );
-        }
         setLiffError(error.toString());
       });
   }, []);
