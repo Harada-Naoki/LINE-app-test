@@ -1,72 +1,40 @@
-import Head from "next/head";
-import packageJson from "../package.json";
+import { MenuItem } from '../components/MenuItem';
+import { Cart } from '../components/Cart';
+import { useCart } from '../hooks/useCart';
+import { menuItems } from '../data/menuItems';
 
-export default function Home(props) {
-  /** You can access to liff and liffError object through the props.
-   *  const { liff, liffError } = props;
-   *  console.log(liff.getVersion());
-   *
-   *  Learn more about LIFF API documentation (https://developers.line.biz/en/reference/liff)
-   **/
+const Home = () => {
+  const { cartItems, addToCart, removeFromCart, updateQuantity, getTotalAmount } = useCart();
+
   return (
-    <div>
-      <Head>
-        <title>LIFF Starter</title>
-      </Head>
-      <div className="home">
-        <h1 className="home__title">
-          Welcome to <br />
-          <a
-            className="home__title__link"
-            href="https://developers.line.biz/en/docs/liff/overview/"
-          >
-            LIFF Starter!
-          </a>
-        </h1>
-        <div className="home__badges">
-          <span className="home__badges__badge badge--primary">
-            LIFF Starter
-          </span>
-          <span className="home__badges__badge badge--secondary">nextjs</span>
-          <span className="home__badges__badge badge--primary">
-            {packageJson.version}
-          </span>
-          <a
-            href="https://github.com/line/line-liff-v2-starter"
-            target="_blank"
-            rel="noreferrer"
-            className="home__badges__badge badge--secondary"
-          >
-            GitHub
-          </a>
-        </div>
-        <div className="home__buttons">
-          <a
-            href="https://developers.line.biz/en/docs/liff/developing-liff-apps/"
-            target="_blank"
-            rel="noreferrer"
-            className="home__buttons__button button--primary"
-          >
-            LIFF Documentation
-          </a>
-          <a
-            href="https://liff-playground.netlify.app/"
-            target="_blank"
-            rel="noreferrer"
-            className="home__buttons__button button--tertiary"
-          >
-            LIFF Playground
-          </a>
-          <a
-            href="https://developers.line.biz/console/"
-            target="_blank"
-            rel="noreferrer"
-            className="home__buttons__button button--secondary"
-          >
-            LINE Developers Console
-          </a>
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">オンライン注文</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.id}
+                  item={item}
+                  onAddToCart={addToCart}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <Cart
+              items={cartItems}
+              onUpdateQuantity={updateQuantity}
+              onRemoveItem={removeFromCart}
+              totalAmount={getTotalAmount()}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Home;
+
