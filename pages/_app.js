@@ -6,10 +6,10 @@ function MyApp({ Component, pageProps }) {
   const [liffObject, setLiffObject] = useState(null);
   const [liffError, setLiffError] = useState(null);
 
-  // Execute liff.init() when the app is initialized
   useEffect(() => {
     console.log("start liff.init()...");
-    const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // 環境変数を読み込む
+    const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // LIFF ID を環境変数から取得
+
     if (!liffId) {
       console.error("LIFF ID is not defined. Please set NEXT_PUBLIC_LIFF_ID.");
       setLiffError("LIFF ID is not defined.");
@@ -21,18 +21,24 @@ function MyApp({ Component, pageProps }) {
       .then(() => {
         console.log("liff.init() done");
         setLiffObject(liff);
+
+        // ログインチェック
+        if (!liff.isLoggedIn()) {
+          console.log("User is not logged in. Redirecting to login...");
+          liff.login(); // ログインページにリダイレクト
+        }
       })
       .catch((error) => {
-        console.log(`liff.init() failed: ${error}`);
+        console.error("liff.init() failed:", error);
         setLiffError(error.toString());
       });
   }, []);
 
-  // Provide `liff` object and `liffError` object
-  // to page component as property
   pageProps.liff = liffObject;
   pageProps.liffError = liffError;
+
   return <Component {...pageProps} />;
 }
 
 export default MyApp;
+
