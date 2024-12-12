@@ -4,6 +4,10 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
-}
+  env: {
+    LIFF_ID: process.env.LIFF_ID, 
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
+
